@@ -1,11 +1,11 @@
 """Comprehensive unit tests for Legal Drafting Assistant milestones.
 
 Validates:
-1. Legal corpus creation and tokenization.
-2. N-gram language model probability estimation, smoothing, and text generation.
+1. Legal corpus creation, stratified splitting, and tokenization.
+2. N-gram language model estimation, baseline comparison, and generation.
 3. GPT-2 clause tagging with custom label tokens and constrained decoding.
 4. Integrated interactive drafting workflow.
-5. Evaluation metrics, confusion matrix, and reporting.
+5. Evaluation metrics, baselines, confusion matrix, and artifact export.
 """
 from pathlib import Path
 import pytest
@@ -15,14 +15,25 @@ from app import core
 
 
 def test_milestone_1():
-    """Milestone 1: Verify legal text corpus preparation, categories, and persistence."""
+    """Milestone 1: Verify legal text corpus preparation, stratified splitting, and persistence."""
     corpus = core.milestone_1()
-    assert len(corpus) >= 20
+    assert len(corpus) == 50
     assert Path("data/legal_corpus.json").exists()
 
     # Check categories
     found_cats = {item["category"] for item in corpus}
     assert found_cats == set(core.LEGAL_CATEGORIES)
+
+    # Test stratified splitting
+    train_data, val_data, test_data = core.split_dataset(corpus, seed=42)
+    assert len(train_data) == 30
+    assert len(val_data) == 10
+    assert len(test_data) == 10
+
+    # Ensure zero data leakage between train and test
+    train_texts = {item["text"] for item in train_data}
+    test_texts = {item["text"] for item in test_data}
+    assert len(train_texts.intersection(test_texts)) == 0
 
     # Test tokenization helper
     tokens = core.tokenize_legal_text("The Receiving Party SHALL NOT disclose!")
@@ -30,7 +41,7 @@ def test_milestone_1():
 
 
 def test_milestone_2():
-    """Milestone 2: Verify n-gram next-word predictor counts, smoothing, and generation."""
+    """Milestone 2: Verify n-gram next-word predictor counts, smoothing, and baseline comparisons."""
     predictor = core.milestone_2(n=3, alpha=0.1)
 
     assert len(predictor.vocab) > 20
@@ -40,7 +51,6 @@ def test_milestone_2():
     dist = predictor.next_word_distribution(["receiving", "party"])
     assert isinstance(dist, dict)
     assert len(dist) > 0
-    # Probabilities should sum to approximately 1.0
     assert abs(sum(dist.values()) - 1.0) < 1e-4
 
     # Test top-k prediction
@@ -60,10 +70,17 @@ def test_milestone_2():
     assert len(unseen_dist) > 0
     assert abs(sum(unseen_dist.values()) - 1.0) < 1e-4
 
+    # Test ngram baseline comparison evaluation
+    train_texts = [item["text"] for item in core.EXPANDED_LEGAL_CORPUS[:30]]
+    test_texts = [item["text"] for item in core.EXPANDED_LEGAL_CORPUS[30:]]
+    ngram_eval = core.evaluate_ngram_models(train_texts, test_texts)
+    assert "Unigram (Baseline)" in ngram_eval
+    assert "Bigram" in ngram_eval
+    assert "Trigram (Proposed)" in ngram_eval
+
 
 def test_milestone_3():
     """Milestone 3: Verify GPT-2 model loading, label expansion, and constrained decoding."""
-    # Fast lightweight test configuration
     classifier = core.LegalClauseClassifier.create_model(use_pretrained=False)
 
     # Verify custom atomic label tokens are registered in tokenizer
@@ -105,21 +122,22 @@ def test_milestone_4():
 
 
 def test_milestone_5():
-    """Milestone 5: Verify evaluation metrics, confusion matrix, and reporting."""
-    eval_results = core.milestone_5()
+    """Milestone 5: Verify evaluation metrics, baseline comparisons, and output artifact exports."""
+    eval_summary = core.milestone_5()
 
-    assert "total_test_samples" in eval_results
-    assert eval_results["total_test_samples"] > 0
-    assert "accuracy" in eval_results
-    assert 0.0 <= eval_results["accuracy"] <= 1.0
-    assert "macro_f1" in eval_results
-    assert 0.0 <= eval_results["macro_f1"] <= 1.0
-    assert "per_class_metrics" in eval_results
-    assert "confusion_matrix" in eval_results
-    assert Path("data/evaluation_results.json").exists()
+    assert "dataset" in eval_summary
+    assert "gpt2_classification_comparison" in eval_summary
+    assert "ngram_language_model_comparison" in eval_summary
 
-    # Check confusion matrix dimensions
-    cm = eval_results["confusion_matrix"]
-    for cat in core.LEGAL_CATEGORIES:
-        assert cat in cm
-        assert len(cm[cat]) == len(core.LEGAL_CATEGORIES)
+    gpt2_comp = eval_summary["gpt2_classification_comparison"]
+    assert "Fine-Tuned GPT-2 (Proposed)" in gpt2_comp
+    assert "Pretrained Zero-Shot GPT-2 (Baseline)" in gpt2_comp
+    assert "Majority-Class (Baseline)" in gpt2_comp
+
+    # Verify generated output files exist in outputs/
+    outputs_dir = Path("outputs")
+    assert (outputs_dir / "evaluation_results.json").exists()
+    assert (outputs_dir / "sample_predictions.json").exists()
+    assert (outputs_dir / "confusion_matrix.csv").exists()
+    assert (outputs_dir / "ngram_prediction_examples.json").exists()
+    assert (outputs_dir / "evaluation_report.md").exists()
