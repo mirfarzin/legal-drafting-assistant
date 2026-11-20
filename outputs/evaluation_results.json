@@ -1,0 +1,72 @@
+{
+  "dataset": {
+    "total_samples": 40,
+    "train_samples": 30,
+    "test_samples": 10,
+    "split_ratio": "60% train, 20% val, 20% test (held-out)",
+    "random_seed": 42
+  },
+  "gpt2_classification_comparison": {
+    "Fine-Tuned GPT-2 (Proposed)": {
+      "accuracy": 0.2,
+      "macro_f1": 0.0667,
+      "per_class": {
+        "CONFIDENTIALITY": {
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1": 0.3333,
+          "support": 2
+        },
+        "GOVERNING_LAW": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 2
+        },
+        "INDEMNIFICATION": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 2
+        },
+        "PAYMENT": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 2
+        },
+        "TERMINATION": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 2
+        }
+      }
+    },
+    "Pretrained Zero-Shot GPT-2 (Baseline)": {
+      "accuracy": 0.2,
+      "macro_f1": 0.1733
+    },
+    "Majority-Class (Baseline)": {
+      "accuracy": 0.2,
+      "macro_f1": 0.0667
+    }
+  },
+  "ngram_language_model_comparison": {
+    "Unigram (Baseline)": {
+      "top1_accuracy": 0.0,
+      "top3_accuracy": 0.0333,
+      "eval_positions": 60
+    },
+    "Bigram": {
+      "top1_accuracy": 0.1333,
+      "top3_accuracy": 0.1833,
+      "eval_positions": 60
+    },
+    "Trigram (Proposed)": {
+      "top1_accuracy": 0.1333,
+      "top3_accuracy": 0.1833,
+      "eval_positions": 60
+    }
+  }
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "text": "The receiving party agrees to hold all confidential information in strict confidence.",
+    "true_category": "CONFIDENTIALITY",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2385,
+    "is_correct": true
+  },
+  {
+    "text": "The receiving party shall not disclose any proprietary information to any third party without prior written consent.",
+    "true_category": "CONFIDENTIALITY",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2365,
+    "is_correct": true
+  },
+  {
+    "text": "All legal actions related to this contract must be brought in the district court of Zurich Switzerland.",
+    "true_category": "GOVERNING_LAW",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.239,
+    "is_correct": false
+  },
+  {
+    "text": "The parties waive any objection to venue or forum non conveniens in the agreed courts.",
+    "true_category": "GOVERNING_LAW",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2386,
+    "is_correct": false
+  },
+  {
+    "text": "The company shall not be liable for indirect special incidental or consequential damages arising hereunder.",
+    "true_category": "INDEMNIFICATION",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.239,
+    "is_correct": false
+  },
+  {
+    "text": "Each party disclaims all implied warranties of merchantability and fitness for a particular purpose.",
+    "true_category": "INDEMNIFICATION",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2401,
+    "is_correct": false
+  },
+  {
+    "text": "The contractor shall submit itemized expense receipts alongside every monthly billing statement.",
+    "true_category": "PAYMENT",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2391,
+    "is_correct": false
+  },
+  {
+    "text": "All amounts payable under this agreement are exclusive of applicable value added taxes or withholding duties.",
+    "true_category": "PAYMENT",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2401,
+    "is_correct": false
+  },
+  {
+    "text": "Either party may terminate for convenience by providing sixty days advance written communication.",
+    "true_category": "TERMINATION",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2396,
+    "is_correct": false
+  },
+  {
+    "text": "In the event of a material breach this agreement may be terminated immediately by written notice.",
+    "true_category": "TERMINATION",
+    "predicted_category": "CONFIDENTIALITY",
+    "confidence": 0.2404,
+    "is_correct": false
+  }
+]

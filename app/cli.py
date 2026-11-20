@@ -39,7 +39,7 @@ def main(argv: list[str] | None = None) -> None:
     draft_p.add_argument("--max-words", type=int, default=10, help="Maximum continuation length")
 
     # Milestone 5: Evaluation
-    eval_p = sub.add_parser("evaluate", help="Evaluate GPT-2 classification accuracy and confusion matrix")
+    eval_p = sub.add_parser("evaluate", help="Evaluate GPT-2 classification accuracy and confusion matrix against baselines")
     eval_p.add_argument("--output", type=str, default=None, help="Optional custom JSON output path")
 
     args = parser.parse_args(argv)
@@ -48,7 +48,9 @@ def main(argv: list[str] | None = None) -> None:
         print("Legal Drafting Assistant is ready. Open README.md for your milestones.")
     elif args.command == "corpus":
         data = core.milestone_1()
+        train_data, val_data, test_data = core.split_dataset(data, seed=42)
         print(f"Legal corpus prepared with {len(data)} clauses across {len(core.LEGAL_CATEGORIES)} categories:")
+        print(f"  Splits: {len(train_data)} train, {len(val_data)} validation, {len(test_data)} test (stratified)")
         for cat in core.LEGAL_CATEGORIES:
             count = sum(1 for c in data if c["category"] == cat)
             print(f"  - {cat:16s}: {count} clauses")
@@ -96,29 +98,34 @@ def main(argv: list[str] | None = None) -> None:
     elif args.command == "evaluate":
         results = core.milestone_5()
         print("=" * 75)
-        print("LEGAL CLAUSE CLASSIFICATION EVALUATION REPORT")
+        print("LEGAL DRAFTING ASSISTANT: EMPIRICAL EVALUATION REPORT")
         print("=" * 75)
-        print(f"Total Test Samples: {results['total_test_samples']}")
-        print(f"Overall Accuracy:   {results['accuracy'] * 100:.2f}%")
-        print(f"Macro-F1 Score:     {results['macro_f1'] * 100:.2f}%")
-        print("\nPer-Class Breakdown:")
-        print(f"{'Category':<18} {'Precision':<12} {'Recall':<12} {'F1-Score':<12} {'Support'}")
+        ds = results["dataset"]
+        print(f"Dataset Split: {ds['train_samples']} train, {ds['test_samples']} test (held-out, stratified)")
+        print("\n1. GPT-2 Classification vs. Baselines (Held-Out Test Set):")
+        print(f"{'Model':<38} {'Accuracy':<12} {'Macro-F1'}")
         print("-" * 65)
-        for cat, m in results["per_class_metrics"].items():
-            print(f"{cat:<18} {m['precision'] * 100:6.1f}%      {m['recall'] * 100:6.1f}%      {m['f1'] * 100:6.1f}%      {m['support']}")
+        for model_name, m in results["gpt2_classification_comparison"].items():
+            print(f"{model_name:<38} {m['accuracy'] * 100:6.1f}%      {m['macro_f1']:.4f}")
         print("-" * 65)
-        print("\nConfusion Matrix (Rows = True, Cols = Predicted):")
-        cats = sorted(core.LEGAL_CATEGORIES)
-        header = f"{'':<16} " + " ".join(f"{c[:4]:>6}" for c in cats)
-        print(header)
-        for c1 in cats:
-            row_str = f"{c1:<16} " + " ".join(f"{results['confusion_matrix'][c1][c2]:>6d}" for c2 in cats)
-            print(row_str)
+
+        print("\n2. N-Gram Language Model vs. Baselines (Next-Word Accuracy):")
+        print(f"{'Model Order':<28} {'Top-1 Accuracy':<16} {'Top-3 Accuracy'}")
+        print("-" * 65)
+        for name, m in results["ngram_language_model_comparison"].items():
+            print(f"{name:<28} {m['top1_accuracy'] * 100:6.1f}%          {m['top3_accuracy'] * 100:6.1f}%")
+        print("-" * 65)
+        print("\nArtifacts successfully written to outputs/:")
+        print("  - outputs/evaluation_results.json")
+        print("  - outputs/sample_predictions.json")
+        print("  - outputs/confusion_matrix.csv")
+        print("  - outputs/ngram_prediction_examples.json")
+        print("  - outputs/evaluation_report.md")
         print("=" * 75)
         if args.output:
             with open(args.output, "w") as f:
                 json.dump(results, f, indent=2)
-            print(f"Results written to {args.output}")
+            print(f"Custom report saved to {args.output}")
 
 
 if __name__ == "__main__":

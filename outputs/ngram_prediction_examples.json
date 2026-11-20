@@ -1,0 +1,132 @@
+[
+  {
+    "prompt": "The receiving party agrees to",
+    "top_candidates": [
+      {
+        "word": "indemnify",
+        "probability": 0.0418
+      },
+      {
+        "word": "defend",
+        "probability": 0.0418
+      },
+      {
+        "word": "data",
+        "probability": 0.0038
+      },
+      {
+        "word": "reimburse",
+        "probability": 0.0038
+      },
+      {
+        "word": "purchaser",
+        "probability": 0.0038
+      }
+    ],
+    "generated_continuation": "the receiving party agrees to indemnify the purchaser for any losses arising from"
+  },
+  {
+    "prompt": "Either party may terminate this agreement",
+    "top_candidates": [
+      {
+        "word": "<eos>",
+        "probability": 0.0671
+      },
+      {
+        "word": "must",
+        "probability": 0.0351
+      },
+      {
+        "word": "for",
+        "probability": 0.0351
+      },
+      {
+        "word": "upon",
+        "probability": 0.0351
+      },
+      {
+        "word": "shall",
+        "probability": 0.0351
+      }
+    ],
+    "generated_continuation": "either party may terminate this agreement"
+  },
+  {
+    "prompt": "This agreement shall be governed by",
+    "top_candidates": [
+      {
+        "word": "manufacturing",
+        "probability": 0.0418
+      },
+      {
+        "word": "security",
+        "probability": 0.0418
+      },
+      {
+        "word": "data",
+        "probability": 0.0038
+      },
+      {
+        "word": "reimburse",
+        "probability": 0.0038
+      },
+      {
+        "word": "purchaser",
+        "probability": 0.0038
+      }
+    ],
+    "generated_continuation": "this agreement shall be governed by manufacturing defects"
+  },
+  {
+    "prompt": "The contractor shall indemnify and",
+    "top_candidates": [
+      {
+        "word": "defend",
+        "probability": 0.0418
+      },
+      {
+        "word": "hold",
+        "probability": 0.0418
+      },
+      {
+        "word": "data",
+        "probability": 0.0038
+      },
+      {
+        "word": "reimburse",
+        "probability": 0.0038
+      },
+      {
+        "word": "purchaser",
+        "probability": 0.0038
+      }
+    ],
+    "generated_continuation": "the contractor shall indemnify and defend the consultant against any legal claims arising"
+  },
+  {
+    "prompt": "The client shall pay all",
+    "top_candidates": [
+      {
+        "word": "invoiced",
+        "probability": 0.0435
+      },
+      {
+        "word": "data",
+        "probability": 0.004
+      },
+      {
+        "word": "reimburse",
+        "probability": 0.004
+      },
+      {
+        "word": "purchaser",
+        "probability": 0.004
+      },
+      {
+        "word": "claims",
+        "probability": 0.004
+      }
+    ],
+    "generated_continuation": "the client shall pay all invoiced fees within thirty days of the state"
+  }
+]
