@@ -1,5 +1,11 @@
-httpx
-pytest
-datasets
-transformers
-torch
+# Pinned production dependencies for Legal Drafting Assistant
+# Tested and verified on Python 3.13.14 (Windows / Ubuntu x86_64)
+
+httpx==0.28.1
+pytest==9.2.0
+datasets==5.2.0
+transformers==5.23.0
+torch==2.15.0
+accelerate==1.16.0
+numpy==2.5.5
+pandas==3.1.1
